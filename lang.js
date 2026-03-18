@@ -60,6 +60,48 @@ const translations={
     s7Text:"Reliable and efficient transport of your goods to any location."
   }
 };
+import express from "express";
+import fetch from "node-fetch";
+import cors from "cors";
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+app.post("/chat", async (req, res) => {
+  const userMessage = req.body.message;
+
+  const response = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer YOUR_API_KEY`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-4.1-mini",
+      input: `
+Ти си агент по име Мартин.
+Работиш за компанија за транспорт, шпедиција и царинење.
+
+Телефон за контакт: +38978599599
+
+Твоја задача:
+- Одговарај професионално
+- Биди краток и јасен
+- Ако клиент бара цена → побарај име и телефон
+- Ако прашањето е сложено → кажи дека ќе го контактира агент
+
+Прашање од клиент:
+${userMessage}
+`
+    })
+  });
+
+  const data = await response.json();
+  res.json({ reply: data.output[0].content[0].text });
+});
+
+app.listen(3000, () => console.log("Server running on port 3000"));
 
 function setLanguage(lang){
   document.querySelectorAll("[data-key]").forEach(el=>{

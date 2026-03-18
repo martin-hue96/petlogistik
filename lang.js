@@ -96,54 +96,5 @@ ${userMessage}
 `
     })
   });
-
-  const data = await response.json();
-  res.json({ reply: data.output[0].content[0].text });
-});
-
-app.listen(3000, () => console.log("Server running on port 3000"));
-
-function setLanguage(lang){
-  document.querySelectorAll("[data-key]").forEach(el=>{
-    const key=el.getAttribute("data-key");
-    if(translations[lang][key]) el.textContent=translations[lang][key];
-
-    const toggle = document.getElementById("chat-toggle");
-const chatbox = document.getElementById("chatbox");
-const input = document.getElementById("chat-input");
-const body = document.getElementById("chat-body");
-
-toggle.onclick = () => {
-  chatbox.style.display = chatbox.style.display === "none" ? "block" : "none";
-};
-
-function addMessage(text, sender) {
-  const div = document.createElement("div");
-  div.className = sender === "user" ? "msg-user" : "msg-bot";
-  div.innerText = text;
-  body.appendChild(div);
-  body.scrollTop = body.scrollHeight;
-}
-
-// старт порака
-addMessage("Здраво! Јас сум Мартин 🤖 Како можам да помогнам?", "bot");
-
-input.addEventListener("keypress", async function(e) {
-  if (e.key === "Enter") {
-    const message = input.value;
-    addMessage(message, "user");
-    input.value = "";
-
-    const res = await fetch("http://localhost:3000/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message })
-    });
-
-    const data = await res.json();
-    addMessage(data.reply, "bot");
-  }
   });
 }
